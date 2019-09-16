@@ -1,0 +1,1 @@
+*The implementation of code2vec is provided by the authors of "code2vec: Learning Distributed Representations of Code" at https://github.com/tech-srl/code2vec.
