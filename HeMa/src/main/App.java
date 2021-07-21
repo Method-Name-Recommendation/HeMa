@@ -16,7 +16,7 @@ public class App {
 
 	public static void main(String[] args) {
 		dir = args[0];
-		numThreads = Integer.getInteger(args[1]);
+		numThreads = Integer.parseInt(args[1]);
 
 		if (dir != null) {
 			File root = new File(dir);
