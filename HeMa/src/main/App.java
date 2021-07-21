@@ -9,21 +9,25 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import util.Counter;
+import util.TrainSet;
 
 public class App {
-	private static String dir = null;
+	private static String projectDir = null;
 	private static int numThreads = 32;
 
 	public static void main(String[] args) {
-		dir = args[0];
+		projectDir = args[0];
 		numThreads = Integer.parseInt(args[1]);
+		String trainDir = args[2];
 
-		if (dir != null) {
-			File root = new File(dir);
+		TrainSet.initialize(trainDir);
+
+		if (projectDir != null) {
+			File root = new File(projectDir);
 			if(root.exists() && root.isDirectory()) {
 				File[] projs = root.listFiles();
 				for(File proj : projs) {
-					dir = proj.getPath();
+					projectDir = proj.getPath();
 					extractDir();
 				}
 			}
@@ -36,7 +40,7 @@ public class App {
 		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
 		LinkedList<Task> tasks = new LinkedList<>();
 		try {
-			Files.walk(Paths.get(dir)).filter(Files::isRegularFile)
+			Files.walk(Paths.get(projectDir)).filter(Files::isRegularFile)
 					.filter(p -> p.toString().toLowerCase().endsWith(".java")).forEach(f -> {
 						Task task = new Task(f);
 						tasks.add(task);

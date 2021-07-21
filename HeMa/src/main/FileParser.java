@@ -35,7 +35,7 @@ public class FileParser {
 		predictor.run();
 	}
 	
-	public CompilationUnit parseFileWithRetries(String code) throws IOException {
+	public static CompilationUnit parseFileWithRetries(String code) throws IOException {
 		final String classPrefix = "public class Test {";
 		final String classSuffix = "}";
 		final String methodPrefix = "SomeUnknownReturnType f() {";
