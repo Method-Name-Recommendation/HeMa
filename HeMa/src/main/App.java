@@ -8,25 +8,28 @@ import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import predictor.SignaturePredictor;
 import util.Counter;
+import util.TrainSet;
 
 public class App {
-	private static String dir = null;
+	private static String evaluationDir = null;
 	private static int numThreads = 32;
+	private static String dataDir = null;
 
 	public static void main(String[] args) {
-		dir = args[0];
+		evaluationDir = args[0];
 		numThreads = Integer.parseInt(args[1]);
+		dataDir = args[2];
+
 		
-		if (dir != null) {
-			File root = new File(dir);
+		if (evaluationDir != null) {
+			File root = new File(evaluationDir);
 			if(root.exists() && root.isDirectory()) {
-				SignaturePredictor.load_trainset();
+				TrainSet.initialize(dataDir);
 				
 				File[] projs = root.listFiles();
 				for(File proj : projs) {
-					dir = proj.getPath();
+					evaluationDir = proj.getPath();
 					extractDir();
 				}
 				
@@ -39,7 +42,7 @@ public class App {
 		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
 		LinkedList<Task> tasks = new LinkedList<>();
 		try {
-			Files.walk(Paths.get(dir)).filter(Files::isRegularFile)
+			Files.walk(Paths.get(evaluationDir)).filter(Files::isRegularFile)
 					.filter(p -> p.toString().toLowerCase().endsWith(".java")).forEach(f -> {
 						Task task = new Task(f);
 						tasks.add(task);
